@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Vegetables Touch Game</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:#fff7d6;color:#333;user-select:none}
+#app{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:14px 12px;text-align:center}
+.dots{font-size:28px;letter-spacing:6px;color:#f59e0b}
+.q{font-size:34px;font-weight:bold;color:#7c3aed;margin:6px 0}
+.choices{display:flex;flex-direction:column;gap:14px;width:100%;max-width:420px}
+.choice{font-size:78px;line-height:1;padding:12px 0;border:6px solid #fff;border-radius:28px;background:#ffd6e7;box-shadow:0 5px 0 #d4a;width:100%}
+.choice:nth-child(2){background:#d6f0ff;box-shadow:0 5px 0 #4a9}
+.choice:nth-child(3){background:#d9ffd6;box-shadow:0 5px 0 #6a4}
+.choice.right{border-color:#16a34a;background:#bbf7d0}
+.choice.wrong{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-12px)}75%{transform:translateX(12px)}}
+.msg{min-height:64px;font-size:38px;font-weight:bold}
+.good{color:#16a34a}.bad{color:#ea580c}
+.btn{font-size:30px;font-weight:bold;color:#fff;background:#2563eb;border:0;border-radius:40px;padding:14px 36px;box-shadow:0 5px 0 #1e3a8a}
+.hide{display:none}
+.big{font-size:110px}
+.title{font-size:44px;color:#16a34a;font-weight:bold;margin:10px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var Q=[
+ {q:"Touch the tomato",a:"tomato",c:[["carrot","🥕"],["tomato","🍅"],["potato","🥔"]]},
+ {q:"Touch the carrot",a:"carrot",c:[["brinjal","🍆"],["onion","🧅"],["carrot","🥕"]]},
+ {q:"Touch the brinjal",a:"brinjal",c:[["brinjal","🍆"],["onion","🧅"],["tomato","🍅"]]}
+];
+var i=0,done=false,app=document.getElementById("app");
+function dots(){var s="";for(var k=0;k<Q.length;k++)s+=(k<i||(k==i&&done))?"⭐":"⚪";return s}
+function show(){
+ if(i>=Q.length){
+  app.innerHTML='<div class="dots">⭐⭐⭐</div><div><div class="big">🎉</div><div class="title">Well Done!</div></div><button class="btn" id="again">Play Again</button>';
+  document.getElementById("again").onclick=function(){i=0;done=false;show()};
+  return;
+ }
+ done=false;var q=Q[i],h='<div class="dots">'+dots()+'</div><div class="q">'+q.q+'</div><div class="choices">';
+ for(var k=0;k<q.c.length;k++)h+='<button class="choice" data-id="'+q.c[k][0]+'">'+q.c[k][1]+'</button>';
+ h+='</div><div class="msg" id="msg"></div><button class="btn hide" id="next">Next Question</button>';
+ app.innerHTML=h;
+ var b=app.querySelectorAll(".choice");
+ for(var k=0;k<b.length;k++)b[k].onclick=pick;
+ document.getElementById("next").onclick=function(){i++;show()};
+}
+function pick(){
+ if(done)return;
+ var m=document.getElementById("msg");
+ if(this.getAttribute("data-id")===Q[i].a){
+  done=true;this.classList.add("right");
+  m.className="msg good";m.innerHTML="✅ Great Job!";
+  document.querySelector(".dots").innerHTML=dots();
+  document.getElementById("next").className="btn";
+ }else{
+  var t=this;t.classList.remove("wrong");void t.offsetWidth;t.classList.add("wrong");
+  m.className="msg bad";m.innerHTML="Try Again!";
+ }
+}
+show();
+</script>
+</body>
+</html>
