@@ -2,67 +2,102 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>Vegetables Touch Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#fff4cf">
+<title>Little Learners - Touch & Learn</title>
 <style>
+:root{--ink:#26334a;--purple:#7046c8;--pink:#ffe0ed;--blue:#dff3ff;--green:#ddf8df;--gold:#ffbd36;--paper:#fff9e9}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:#fff7d6;color:#333;user-select:none}
-#app{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:14px 12px;text-align:center}
-.dots{font-size:28px;letter-spacing:6px;color:#f59e0b}
-.q{font-size:34px;font-weight:bold;color:#7c3aed;margin:6px 0}
-.choices{display:flex;flex-direction:column;gap:14px;width:100%;max-width:420px}
-.choice{font-size:78px;line-height:1;padding:12px 0;border:6px solid #fff;border-radius:28px;background:#ffd6e7;box-shadow:0 5px 0 #d4a;width:100%}
-.choice:nth-child(2){background:#d6f0ff;box-shadow:0 5px 0 #4a9}
-.choice:nth-child(3){background:#d9ffd6;box-shadow:0 5px 0 #6a4}
-.choice.right{border-color:#16a34a;background:#bbf7d0}
-.choice.wrong{animation:shake .4s}
-@keyframes shake{25%{transform:translateX(-12px)}75%{transform:translateX(12px)}}
-.msg{min-height:64px;font-size:38px;font-weight:bold}
-.good{color:#16a34a}.bad{color:#ea580c}
-.btn{font-size:30px;font-weight:bold;color:#fff;background:#2563eb;border:0;border-radius:40px;padding:14px 36px;box-shadow:0 5px 0 #1e3a8a}
-.hide{display:none}
-.big{font-size:110px}
-.title{font-size:44px;color:#16a34a;font-weight:bold;margin:10px}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:linear-gradient(145deg,#fff4cf,#fce7f3 55%,#e4f5ff);color:var(--ink)}
+body{min-height:100svh}
+button{font:inherit;cursor:pointer;touch-action:manipulation}
+#app{width:100%;min-height:100svh;display:flex;justify-content:center;padding:clamp(10px,2.5vw,24px)}
+.shell{width:min(100%,820px);min-height:calc(100svh - 24px);display:flex;flex-direction:column;gap:14px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.brand{font-weight:900;font-size:clamp(20px,4vw,30px);color:#23834c}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.smallbtn{border:0;border-radius:999px;background:#fff;padding:9px 13px;font-weight:800;color:#35415a;box-shadow:0 3px 0 #e4d9c8}
+.panel{background:rgba(255,255,255,.88);border:3px solid #fff;border-radius:26px;padding:clamp(14px,3vw,24px);box-shadow:0 8px 22px #735b3420}
+.center{text-align:center}
+h1,h2,p{margin-top:0}
+h1{font-size:clamp(30px,6vw,48px);line-height:1.08;margin-bottom:10px;color:#21844c}
+h2{font-size:clamp(23px,4.5vw,34px);margin-bottom:8px}
+.sub{font-size:clamp(15px,2.6vw,19px);color:#59657a;line-height:1.45}
+.levelgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:20px}
+.level{border:0;border-radius:22px;padding:18px 10px;min-height:130px;font-size:clamp(18px,3.5vw,24px);font-weight:900;color:#28334a;box-shadow:0 5px 0 #00000018}
+.level span{display:block;font-size:42px;margin-bottom:5px}
+.level:nth-child(1){background:#ddf8df}.level:nth-child(2){background:#ffe1ec}.level:nth-child(3){background:#e1efff}.level:nth-child(4){background:#fff0c7}
+.stats{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-weight:900}
+.stat{background:#fff4ce;border-radius:999px;padding:8px 13px}
+.progress{height:13px;background:#eee8dc;border-radius:99px;overflow:hidden;margin:12px 0 18px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#61c77a,#f7c34d);border-radius:99px;transition:width .25s}
+.prompt{font-size:clamp(25px,5vw,39px);font-weight:950;color:var(--purple);margin:12px 0 5px}
+.hint{font-size:15px;color:#6a7180;margin-bottom:12px}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px auto;max-width:700px}
+.choice{min-width:0;min-height:clamp(120px,24vw,175px);border:4px solid white;border-radius:23px;padding:12px 5px;background:var(--pink);box-shadow:0 5px 0 #e9b8ca;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#27344a}
+.choice:nth-child(2){background:var(--blue);box-shadow:0 5px 0 #b6d8eb}
+.choice:nth-child(3){background:var(--green);box-shadow:0 5px 0 #b7d9b9}
+.emoji{font-size:clamp(48px,10vw,76px);line-height:1.1}
+.name{font-size:clamp(14px,2.8vw,20px);font-weight:900;text-transform:capitalize}
+.choice:active{transform:translateY(3px);box-shadow:0 2px 0 #bbb}
+.choice.correct{border-color:#25a65a;background:#c9f5d4}
+.choice.wrong{border-color:#f07863;animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.feedback{min-height:42px;font-size:clamp(21px,4vw,29px);font-weight:950;text-align:center}
+.good{color:#168347}.bad{color:#d85a36}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.primary,.secondary{border:0;border-radius:999px;padding:13px 24px;font-size:clamp(16px,3vw,21px);font-weight:950}
+.primary{background:#2765d9;color:white;box-shadow:0 5px 0 #19449b}
+.secondary{background:#fff;color:#34415a;box-shadow:0 4px 0 #ded6c8}
+.primary:disabled{opacity:.45;cursor:not-allowed}
+.bigemoji{font-size:clamp(72px,16vw,120px);line-height:1.1}
+.trophy{font-size:clamp(78px,18vw,135px);filter:drop-shadow(0 7px 4px #c79b4c55)}
+.resultstars{font-size:clamp(32px,7vw,54px);letter-spacing:5px;margin:10px}
+.reviewlist{display:grid;gap:8px;text-align:left;margin:15px auto;max-width:560px}
+.reviewitem{display:flex;align-items:center;gap:12px;background:#fff3e4;border-radius:15px;padding:10px 13px;font-weight:800}
+.reviewitem .emoji{font-size:32px}
+.reviewitem small{display:block;color:#667085;font-weight:600}
+.note{font-size:13px;color:#6d7480;text-align:center}
+.hide{display:none!important}
+@media(max-width:480px){#app{padding:8px}.shell{min-height:calc(100svh - 16px);gap:10px}.levelgrid{gap:9px}.level{min-height:115px}.panel{border-radius:21px}.choices{gap:7px}.choice{border-radius:17px;min-height:118px}.topbar{justify-content:center}.brand{width:100%;text-align:center}.tools{justify-content:center}}
+@media(orientation:landscape) and (max-height:560px){#app{padding:6px}.shell{min-height:calc(100svh - 12px);gap:6px}.panel{padding:10px}.prompt{margin:4px}.choices{margin:7px auto}.choice{min-height:92px}.emoji{font-size:44px}.progress{margin:6px 0 8px}}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
-var Q=[
- {q:"Touch the tomato",a:"tomato",c:[["carrot","🥕"],["tomato","🍅"],["potato","🥔"]]},
- {q:"Touch the carrot",a:"carrot",c:[["brinjal","🍆"],["onion","🧅"],["carrot","🥕"]]},
- {q:"Touch the brinjal",a:"brinjal",c:[["brinjal","🍆"],["onion","🧅"],["tomato","🍅"]]}
+var levels=[
+ {name:"Vegetables",icon:"🥕",questions:[
+  ["tomato","🍅"],["carrot","🥕"],["potato","🥔"],["brinjal","🍆"],["onion","🧅"],["cabbage","🥬"],["cucumber","🥒"],["pumpkin","🎃"],["beetroot","🫜"],["corn","🌽"]
+ ]},
+ {name:"Fruits",icon:"🍎",questions:[
+  ["apple","🍎"],["banana","🍌"],["orange","🍊"],["grapes","🍇"],["watermelon","🍉"],["pineapple","🍍"],["mango","🥭"],["strawberry","🍓"],["pear","🍐"],["cherries","🍒"]
+ ]},
+ {name:"Colours",icon:"🎨",questions:[
+  ["red","🟥"],["blue","🟦"],["green","🟩"],["yellow","🟨"],["orange","🟧"],["purple","🟪"],["black","⬛"],["white","⬜"],["brown","🟫"],["pink","🌸"]
+ ]},
+ {name:"Animals",icon:"🦁",questions:[
+  ["lion","🦁"],["elephant","🐘"],["monkey","🐒"],["rabbit","🐰"],["cat","🐱"],["dog","🐶"],["cow","🐮"],["goat","🐐"],["fish","🐟"],["bird","🐦"]
+ ]}
 ];
-var i=0,done=false,app=document.getElementById("app");
-function dots(){var s="";for(var k=0;k<Q.length;k++)s+=(k<i||(k==i&&done))?"⭐":"⚪";return s}
-function show(){
- if(i>=Q.length){
-  app.innerHTML='<div class="dots">⭐⭐⭐</div><div><div class="big">🎉</div><div class="title">Well Done!</div></div><button class="btn" id="again">Play Again</button>';
-  document.getElementById("again").onclick=function(){i=0;done=false;show()};
-  return;
- }
- done=false;var q=Q[i],h='<div class="dots">'+dots()+'</div><div class="q">'+q.q+'</div><div class="choices">';
- for(var k=0;k<q.c.length;k++)h+='<button class="choice" data-id="'+q.c[k][0]+'">'+q.c[k][1]+'</button>';
- h+='</div><div class="msg" id="msg"></div><button class="btn hide" id="next">Next Question</button>';
- app.innerHTML=h;
- var b=app.querySelectorAll(".choice");
- for(var k=0;k<b.length;k++)b[k].onclick=pick;
- document.getElementById("next").onclick=function(){i++;show()};
-}
-function pick(){
- if(done)return;
- var m=document.getElementById("msg");
- if(this.getAttribute("data-id")===Q[i].a){
-  done=true;this.classList.add("right");
-  m.className="msg good";m.innerHTML="✅ Great Job!";
-  document.querySelector(".dots").innerHTML=dots();
-  document.getElementById("next").className="btn";
- }else{
-  var t=this;t.classList.remove("wrong");void t.offsetWidth;t.classList.add("wrong");
-  m.className="msg bad";m.innerHTML="Try Again!";
- }
-}
-show();
+var app=document.getElementById("app"),levelIndex=0,questionIndex=0,questions=[],score=0,stars=0,missed=[],answered=false,soundOn=true,voiceOn=true,wrongThisQuestion=false;
+var audioCtx=null;
+function shuffle(a){var x=a.slice();for(var j=x.length-1;j>0;j--){var k=Math.floor(Math.random()*(j+1)),t=x[j];x[j]=x[k];x[k]=t}return x}
+function speak(text){if(!voiceOn||!("speechSynthesis" in window))return;window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang="en-IN";u.rate=.88;u.pitch=1.08;window.speechSynthesis.speak(u)}
+function tone(freq,duration,type){if(!soundOn)return;try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();var o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type="sine";o.frequency.value=freq;g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.12,audioCtx.currentTime+.015);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+duration);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+duration)}catch(e){}}
+function happy(){tone(660,.12);setTimeout(function(){tone(880,.18)},100)}
+function boo(){tone(180,.18)}
+function shell(body){app.innerHTML='<main class="shell"><header class="topbar"><div class="brand">🌈 Little Learners</div><div class="tools"><button class="smallbtn" id="voiceBtn" aria-label="Toggle voice">'+(voiceOn?'🔊 Voice ON':'🔇 Voice OFF')+'</button><button class="smallbtn" id="soundBtn">'+(soundOn?'🎵 Sound ON':'🔕 Sound OFF')+'</button><button class="smallbtn" id="fullBtn">⛶ Full screen</button></div></header>'+body+'<div class="note">Learn • Listen • Play • Shine ⭐</div></main>';document.getElementById("voiceBtn").onclick=function(){voiceOn=!voiceOn;this.textContent=voiceOn?'🔊 Voice ON':'🔇 Voice OFF';if(!voiceOn&&window.speechSynthesis)window.speechSynthesis.cancel()};document.getElementById("soundBtn").onclick=function(){soundOn=!soundOn;this.textContent=soundOn?'🎵 Sound ON':'🔕 Sound OFF'};document.getElementById("fullBtn").onclick=fullScreen}
+function fullScreen(){var el=document.documentElement;if(!document.fullscreenElement&&el.requestFullscreen)el.requestFullscreen().catch(function(){});else if(document.exitFullscreen)document.exitFullscreen()}
+function home(){if(window.speechSynthesis)window.speechSynthesis.cancel();var h='<section class="panel center"><div class="bigemoji">🎒🌟</div><h1>Touch & Learn!</h1><p class="sub">Choose a level and learn with pictures, sounds and stars.</p><div class="levelgrid">';levels.forEach(function(l,n){h+='<button class="level" data-level="'+n+'"><span>'+l.icon+'</span>Level '+(n+1)+'<br>'+l.name+'</button>'});h+='</div></section>';shell(h);app.querySelectorAll(".level").forEach(function(b){b.onclick=function(){startLevel(Number(this.dataset.level))}})}
+function startLevel(n){levelIndex=n;questionIndex=0;score=0;stars=0;missed=[];answered=false;questions=shuffle(levels[n].questions).map(function(q){var opts=shuffle([q].concat(shuffle(levels[n].questions.filter(function(x){return x[0]!==q[0]})).slice(0,2)));return {answer:q,choices:opts}});showQuestion()}
+function showQuestion(){answered=false;wrongThisQuestion=false;var q=questions[questionIndex],l=levels[levelIndex];var h='<section class="panel"><div class="stats"><span class="stat">'+l.icon+' '+l.name+'</span><span class="stat">⭐ '+stars+'</span><span class="stat">Score: '+score+'/10</span></div><div class="progress"><div class="bar" style="width:'+((questionIndex)/10*100)+'%"></div></div><div class="center"><div class="prompt">Find the '+q.answer[0]+'!</div><div class="hint">Listen and touch the correct picture.</div></div><div class="choices">';q.choices.forEach(function(c){h+='<button class="choice" data-name="'+c[0]+'"><span class="emoji">'+c[1]+'</span><span class="name">'+c[0]+'</span></button>'});h+='</div><div class="feedback" id="feedback" aria-live="polite"></div><div class="actions"><button class="secondary" id="repeatBtn">🔊 Hear again</button><button class="primary hide" id="nextBtn">Next ➜</button></div></section>';shell(h);app.querySelectorAll(".choice").forEach(function(b){b.onclick=pick});document.getElementById("repeatBtn").onclick=function(){speak("Find the "+q.answer[0])};document.getElementById("nextBtn").onclick=nextQuestion;speak("Find the "+q.answer[0])}
+function pick(){if(answered)return;var chosen=this.dataset.name,q=questions[questionIndex],feedback=document.getElementById("feedback");if(chosen===q.answer[0]){answered=true;score++;if(!wrongThisQuestion)stars++;this.classList.add("correct");feedback.className="feedback good";feedback.textContent=wrongThisQuestion?"👏 Correct! Keep learning!":"🌟 Excellent! Great job!";happy();speak("Correct! Great job! "+q.answer[0]);document.getElementById("nextBtn").classList.remove("hide");document.getElementById("repeatBtn").classList.add("hide");app.querySelector(".bar").style.width=((questionIndex+1)/10*100)+"%"}else{wrongThisQuestion=true;if(!missed.some(function(m){return m.question===q.answer[0]}))missed.push({question:q.answer[0],emoji:q.answer[1],chosen:chosen});this.classList.remove("wrong");void this.offsetWidth;this.classList.add("wrong");feedback.className="feedback bad";feedback.textContent="😊 Try again!";boo();speak("Try again. Find the "+q.answer[0])}}
+function nextQuestion(){questionIndex++;if(questionIndex>=10)finishLevel();else showQuestion()}
+function finishLevel(){if(window.speechSynthesis)window.speechSynthesis.cancel();var l=levels[levelIndex],h='<section class="panel center"><div class="trophy">🏆</div><h1>Level Complete!</h1><h2>'+l.icon+' '+l.name+'</h2><div class="resultstars">'+(stars>=9?'⭐⭐⭐⭐⭐':stars>=7?'⭐⭐⭐⭐':stars>=5?'⭐⭐⭐':stars>=3?'⭐⭐':'⭐')+'</div><p class="sub">You got '+score+' out of 10 correct answers!</p><p class="sub">You earned '+stars+' stars.</p><div class="actions"><button class="secondary" id="reviewBtn">📖 Review mistakes ('+missed.length+')</button><button class="primary" id="continueBtn">'+(levelIndex===3?'Finish 🎉':'Next level ➜')+'</button></div><div class="actions"><button class="secondary" id="homeBtn">🏠 All levels</button><button class="secondary" id="replayBtn">↻ Play again</button></div></section>';shell(h);document.getElementById("reviewBtn").onclick=review;document.getElementById("continueBtn").onclick=function(){if(levelIndex===3)allDone();else startLevel(levelIndex+1)};document.getElementById("homeBtn").onclick=home;document.getElementById("replayBtn").onclick=function(){startLevel(levelIndex)};speak("Level complete! You got "+score+" out of ten. Well done!")}
+function review(){var h='<section class="panel center"><div class="bigemoji">📖</div><h2>Let us learn together!</h2><p class="sub">These are the pictures to practise again.</p>';if(!missed.length)h+='<h2 class="good">Perfect! No mistakes! 🌟</h2>';else{h+='<div class="reviewlist">';missed.forEach(function(m){h+='<div class="reviewitem"><span class="emoji">'+m.emoji+'</span><div><strong>'+m.question+'</strong><small>You chose: '+m.chosen+'</small></div></div>'});h+='</div>'}h+='<div class="actions"><button class="primary" id="backResult">Back to results</button><button class="secondary" id="practise">Practise this level</button></div></section>';shell(h);document.getElementById("backResult").onclick=finishLevel;document.getElementById("practise").onclick=function(){startLevel(levelIndex)}}
+function allDone(){var h='<section class="panel center"><div class="trophy">🏆</div><h1>Super Star!</h1><div class="bigemoji">🎉🌈🎉</div><h2>You completed all 4 levels!</h2><p class="sub">You are a Little Learners champion.</p><div class="actions"><button class="primary" id="homeAgain">Play again</button></div></section>';shell(h);document.getElementById("homeAgain").onclick=home;speak("Amazing! You completed all four levels. You are a champion!");happy()}
+home();
 </script>
 </body>
 </html>
